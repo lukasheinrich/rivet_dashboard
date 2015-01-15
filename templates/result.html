@@ -16,14 +16,22 @@ $(document).ready(function(){
 <div class="row">
     <div class="col-md-12">
         <h2>plots</h2>
-          {% for plot in ['Phi'] %}
-              <div class="col-md-3" id="PLOT-{{plot}}" name="PLOT-{{plot}}">>
-                <a href="#PLOT-{{plot}}">&#9875;</a><a href="/plot/{{date}}/Phi.dat" class="datalink">&#8984</a> {{plot}}:<br/>
-                <a href="/plot/{{date}}/Phi.pdf" class="thumbnail">
-                    <img src="/plot/{{date}}/Phi.png">
-                </a>
-              </div>
 
+          {% for analysis,plots in plotdata.iteritems() %}
+
+          <div class="analysis-container">
+            <h2>{{analysis}}</h2>
+              {% for plot in plots %}
+                  <div class="col-md-3" id="PLOT-{{plot}}" name="PLOT-{{plot}}">>
+                    <a href="#PLOT-{{plot}}">&#9875;</a><a href="/plot/{{date}}/{{analysis}}/{{plot}}.dat" class="datalink">&#8984</a> {{plot}}:<br/>
+                    <a href="/plot/{{date}}/{{analysis}}/{{plot}}.pdf" class="thumbnail">
+                        <img src="/plot/{{date}}/{{analysis}}/{{plot}}.png">
+                    </a>
+                  </div>
+
+              {% endfor %}
+              
+          </div>
           {% endfor %}
 
     </div>

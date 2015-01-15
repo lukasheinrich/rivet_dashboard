@@ -5,6 +5,7 @@ app = flask.Flask(__name__)
 app.debug = True
 
 import glob
+import os
 
 @app.route('/')
 def home():
@@ -14,11 +15,14 @@ def home():
         
 @app.route('/result/<date>')
 def result_view(date):
-    return flask.render_template('result.html',date = date)
     
-@app.route('/plot/<date>/<path:file>')
-def plots(date,file):
-  resultdir = 'nightly_results/{}/MC_GENERIC'.format(date)
+    analyses = map(os.path.basename,filter(os.path.isdir,glob.glob('nightly_results/{}/*'.format(date))))
+    plotdata = {a:[os.path.basename(p).rsplit('.',1)[0] for p in glob.glob('nightly_results/{}/{}/*.dat'.format(date,a))] for a in analyses}
+    return flask.render_template('result.html',date = date, plotdata = plotdata)
+    
+@app.route('/plot/<date>/<analysis>/<path:file>')
+def plots(date,analysis,file):
+  resultdir = 'nightly_results/{}/{}'.format(date,analysis)
   print resultdir
   return flask.send_from_directory(resultdir,file)
 
