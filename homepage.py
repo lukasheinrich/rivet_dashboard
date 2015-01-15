@@ -17,7 +17,8 @@ def home():
 def result_view(date):
     
     analyses = map(os.path.basename,filter(os.path.isdir,glob.glob('nightly_results/{}/*'.format(date))))
-    plotdata = {a:[os.path.basename(p).rsplit('.',1)[0] for p in glob.glob('nightly_results/{}/{}/*.dat'.format(date,a))] for a in analyses}
+    plotlists = [[os.path.basename(p).rsplit('.',1)[0] for p in glob.glob('nightly_results/{}/{}/*.dat'.format(date,a))] for a in analyses]
+    plotdata = dict(zip(analyses,plotlists))
     return flask.render_template('result.html',date = date, plotdata = plotdata)
     
 @app.route('/plot/<date>/<analysis>/<path:file>')
