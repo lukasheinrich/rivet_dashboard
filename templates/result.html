@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+        
+{% block prebody %}
+<script type="text/javascript">
+$(document).ready(function(){
+});
+</script>
+
+{% endblock %}
+
+{% block container%}
+<div class="page-header">
+    <h1>Nightly Result <small> from {{date}}</small></h1>
+</div>    
+
+<div class="row">
+    <div class="col-md-12">
+        <h2>plots</h2>
+          {% for plot in ['Phi'] %}
+              <div class="col-md-3" id="PLOT-{{plot}}" name="PLOT-{{plot}}">>
+                <a href="#PLOT-{{plot}}">&#9875;</a><a href="/plot/{{date}}/Phi.dat" class="datalink">&#8984</a> {{plot}}:<br/>
+                <a href="/plot/{{date}}/Phi.pdf" class="thumbnail">
+                    <img src="/plot/{{date}}/Phi.png">
+                </a>
+              </div>
+
+          {% endfor %}
+
+    </div>
+</div>
+{% endblock %}
