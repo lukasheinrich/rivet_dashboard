@@ -13,24 +13,31 @@ $(document).ready(function(){
     <h1>Nightly Result <small> from {{date}}</small></h1>
 </div>    
 
+
 <div class="row">
     <div class="col-md-12">
         <h2>plots</h2>
 
-          {% for analysis,plots in plotdata.iteritems() %}
+          {% for cat,allanalyses in plotdata.iteritems() %}
 
-          <div class="analysis-container">
-            <h2>{{analysis}}</h2>
-              {% for plot in plots %}
-                  <div class="col-md-3" id="PLOT-{{plot}}" name="PLOT-{{plot}}">>
-                    <a href="#PLOT-{{plot}}">&#9875;</a><a href="/plot/{{date}}/{{analysis}}/{{plot}}.dat" class="datalink">&#8984</a> {{plot}}:<br/>
-                    <a href="/plot/{{date}}/{{analysis}}/{{plot}}.pdf" class="thumbnail">
-                        <img src="/plot/{{date}}/{{analysis}}/{{plot}}.png">
-                    </a>
-                  </div>
-
-              {% endfor %}
-              
+          <div class="catergory-container">
+            <h2>{{cat}}</h2>
+	      <a href="/catfile/{{date}}/{{cat}}/Analysis.yoda" >YODA</a>
+	      <a href="/catfile/{{date}}/{{cat}}/sherpa.log" >Logfile</a>
+	      <a href="/catfile/{{date}}/{{cat}}/Results.db" >Results.db</a>
+		{% for analysis,plots in allanalyses.iteritems() %}
+		  <div class="analysis-container">
+		    <h3>{{analysis}}</h3>
+		      {% for plot in plots %}
+			  <div class="col-md-3" id="PLOT-{{plot}}" name="PLOT-{{plot}}">
+			    <a href="#PLOT-{{plot}}">&#9875;</a><a href="/plot/{{date}}/{{cat}}/{{analysis}}/{{plot}}.dat" class="datalink">&#8984</a> {{plot}}:<br/>
+			    <a href="/plot/{{date}}/{{cat}}/{{analysis}}/{{plot}}.pdf" class="thumbnail">
+				<img src="/plot/{{date}}/{{cat}}/{{analysis}}/{{plot}}.png">
+			    </a>
+			  </div>
+		      {% endfor %}
+		  </div>
+	      {% endfor %}
           </div>
           {% endfor %}
 

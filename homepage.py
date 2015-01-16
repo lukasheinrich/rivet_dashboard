@@ -15,17 +15,32 @@ def home():
         
 @app.route('/result/<date>')
 def result_view(date):
+   
+    master ={} 
+    cat = map(os.path.basename,filter(os.path.isdir,glob.glob('nightly_results/{0}/*'.format(date))))
+    for c in cat:
+        master[c] = {}
+        analyses = filter(os.path.isdir, glob.glob('nightly_results/{0}/{1}/plots/*'.format(date,c)))
+        analyses = [x.rsplit("/",1)[-1] for x in analyses]
+        for a in analyses:
+	    plotlist = [os.path.basename(p).rsplit('.',1)[0] for p in glob.glob('nightly_results/{0}/{1}/plots/{2}/*.dat'.format(date,c,a))]
+            master[c][a] = plotlist
+            
+       
+#    analyses = map(os.path.basename,filter(os.path.isdir,glob.glob('nightly_results/{0}/*'.format(date))))
+#    plotlists = [[os.path.basename(p).rsplit('.',1)[0] for p in glob.glob('nightly_results/{0}/{1}/plots/*.dat'.format(date,a))] for a in analyses]
+#    plotdata = dict(zip(analyses,plotlists))
+    return flask.render_template('result.html',date = date, plotdata = master)
     
-    analyses = map(os.path.basename,filter(os.path.isdir,glob.glob('nightly_results/{0}/*'.format(date))))
-    plotlists = [[os.path.basename(p).rsplit('.',1)[0] for p in glob.glob('nightly_results/{0}/{1}/plots/*.dat'.format(date,a))] for a in analyses]
-    plotdata = dict(zip(analyses,plotlists))
-    return flask.render_template('result.html',date = date, plotdata = plotdata)
-    
-@app.route('/plot/<date>/<analysis>/<path:file>')
-def plots(date,analysis,file):
-  resultdir = 'nightly_results/{0}/{1}'.format(date,analysis)
-  print resultdir
+@app.route('/plot/<date>/<cat>/<analysis>/<path:file>')
+def plots(date,cat,analysis,file):
+  resultdir = 'nightly_results/{0}/{1}/plots/{2}'.format(date,cat,analysis)
   return flask.send_from_directory(resultdir,file)
+
+@app.route('/catfile/<date>/<cat>/<path:file>')
+def catfile(date, cat, file):
+  resultdir = 'nightly_results/{0}/{1}'.format(date,cat)
+  return flask.send_from_directory(resultdir, file)
 
 
 if __name__ == "__main__":
